@@ -14,6 +14,8 @@ import axios from "axios";
 import { Board } from "@/types/db";
 import Label from "./ui/Label";
 import { usePathname, useRouter } from "next/navigation";
+import { useOnClickOutside } from "@/hooks/useClickOutside";
+import { toast } from "react-hot-toast";
 
 interface NavProps {
   session: Session;
@@ -29,13 +31,13 @@ const Nav: FC<NavProps> = ({ session }) => {
   const ref = useRef<HTMLDivElement>(null);
   const refBoard = useRef<HTMLDivElement>(null);
 
-  // useOnClickOutside(refBoard, () => {
-  //   setOpenBoard(false);
-  // });
+  useOnClickOutside(refBoard, () => {
+    setOpenBoard(false);
+  });
 
-  // useOnClickOutside(ref, () => {
-  //   setOpen(false);
-  // });
+  useOnClickOutside(ref, () => {
+    setOpen(false);
+  });
 
   const clearState = () => {
     setOpen(false);
@@ -48,13 +50,17 @@ const Nav: FC<NavProps> = ({ session }) => {
         setOpenBoard(false);
       }
     };
-
     visualViewport!.addEventListener("resize", clearState);
     document.addEventListener("keydown", handleKeyDown);
-    axios.post("/api/user/boards", {}).then((response) => {
-      const data = response.data as Board[];
-      setBoards(data);
-    });
+    axios
+      .post("/api/user/boards", {})
+      .then((response) => {
+        const data = response.data as Board[];
+        setBoards(data);
+      })
+      .catch((err) => {
+        toast.error("couldn't get boards");
+      });
 
     return () => {
       visualViewport!.removeEventListener("resize", clearState);
@@ -88,7 +94,7 @@ const Nav: FC<NavProps> = ({ session }) => {
                 All boards (3)
               </p>
             </div>
-            <div className="boards flex flex-col font-bold">
+            <div className="boards flex flex-col font-bold overflow-y-scroll max-h-[353px]">
               {boards.length >= 1 ? (
                 boards.map((board, index) => {
                   if (path.split("/")[2] == board.id) {
@@ -105,33 +111,34 @@ const Nav: FC<NavProps> = ({ session }) => {
                       variant={"default"}
                       text={board.name}
                       key={index}
-                      onClick={() => push(`/board/${board.id}`)}
+                      onClick={() => push(`/home/board/${board.id}`)}
                     />
                   );
                 })
               ) : (
                 <Label className="pl-6">Create a board to get started</Label>
               )}
-              <BoardUi
-                onClick={() => {
-                  setOpenBoard(true);
-                }}
-                variant={"new"}
-                text="+ Create a new board"
-                fill="#635fc7"
-              />
-              <Modal
-                isOpen={openBoard}
-                className="top-0 md:left-0 -left-6 flex justify-center place-items-center"
-              >
-                <CreateNewBoard
-                  ref={refBoard}
-                  close={() => setOpenBoard(false)}
-                />
-              </Modal>
             </div>
+            <BoardUi
+              onClick={() => {
+                setOpenBoard(true);
+              }}
+              variant={"new"}
+              text="+ Create a new board"
+              fill="#635fc7"
+            />
           </div>
         </div>
+        <Modal
+          isOpen={openBoard}
+          className="top-0 md:left-0 -left-6 flex justify-center place-items-center"
+        >
+          <CreateNewBoard
+            ref={refBoard}
+            setBoards={setBoards}
+            close={() => setOpenBoard(false)}
+          />
+        </Modal>
         <div className="w-1/2 flex justify-end pr-3 gap-3 md:hidden">
           <Button variant={"main"} size={"small"} extra={"plus"}>
             +

@@ -6,14 +6,16 @@ import { v4 as uuid } from "uuid";
 import { Toaster, toast } from "react-hot-toast";
 import Label from "./Label";
 import axios from "axios";
+import { Board } from "@/types/db";
 
 interface CreateNewBoardProps {
   ref: RefObject<HTMLDivElement>;
   close: () => void;
+  setBoards: React.Dispatch<React.SetStateAction<Board[]>>;
 }
 
 const CreateNewBoard = React.forwardRef<HTMLDivElement, CreateNewBoardProps>(
-  ({ close }, ref) => {
+  ({ close, setBoards }, ref) => {
     const scrollRef = useRef(null);
     const [name, setName] = useState<string>("");
     const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -61,7 +63,10 @@ const CreateNewBoard = React.forwardRef<HTMLDivElement, CreateNewBoardProps>(
           cols: Cols,
         })
         .then((data) => {
-          toast.success(data.data);
+          toast.success("created successfully");
+          setBoards((prev) => {
+            return [...prev, data.data];
+          });
           close();
         })
         .catch((err) => {

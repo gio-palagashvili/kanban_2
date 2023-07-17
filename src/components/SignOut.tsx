@@ -2,7 +2,6 @@
 import { ButtonHTMLAttributes, FC, ReactNode, useState } from "react";
 import { signOut } from "next-auth/react";
 import { BiLogOut } from "react-icons/bi";
-import { ClassValue } from "clsx";
 import { cn } from "@/lib/utils";
 import { Toaster, toast } from "react-hot-toast";
 
@@ -12,7 +11,6 @@ interface SignOutProps {
 
 const SignOut: FC<SignOutProps> = ({ Classes }) => {
   const signOutImp = async () => {
-    signOut({ callbackUrl: "/login" });
     toast.promise(signOut({ callbackUrl: "/login" }), {
       loading: "loging out",
       success: "logged out",

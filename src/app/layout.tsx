@@ -18,14 +18,9 @@ export default async function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const session = await getServerSession(authOptions);
-  if (!session) redirect("/login");
   return (
     <html lang="en">
-      <body className={cn(inter.className, "h-full flex")}>
-        <Nav session={session} />
-        {children}
-      </body>
+      <body className={cn(inter.className, "h-full flex")}>{children}</body>
     </html>
   );
 }
