@@ -22,6 +22,7 @@ const buttonvariants = cva(
       size: {
         small: "p-3 w-12",
         medium: "p-2 w-40 h-12 text-sm",
+        secondary: "w-full mt-2 h-10 font-[500] text-sm",
         full: "w-full",
       },
       extra: {

@@ -1,9 +1,12 @@
 "use client";
 import BoardHeader from "@/components/ui/BoardHeader";
+import CreateNewTask from "@/components/ui/CreateNewTask";
+import Modal from "@/components/ui/Modal";
 import TaskItem from "@/components/ui/TaskItem";
+import { useOnClickOutside } from "@/hooks/useClickOutside";
 import axios from "axios";
 import { redirect } from "next/navigation";
-import { FC, useEffect, useState } from "react";
+import { FC, useEffect, useRef, useState } from "react";
 
 interface pageProps {
   params: {
@@ -13,6 +16,12 @@ interface pageProps {
 
 const page: FC<pageProps> = ({ params }) => {
   const { boardId } = params;
+  const [isOpen, setIsOpen] = useState<boolean>(false);
+  const ref = useRef<HTMLDivElement>(null);
+
+  useOnClickOutside(ref, () => {
+    setIsOpen(false);
+  });
   const [board, setBoard] = useState<Board>({
     id: "2",
     columns: [
@@ -39,7 +48,10 @@ const page: FC<pageProps> = ({ params }) => {
 
   return (
     <div className="w-full">
-      <BoardHeader name={!board ? "loading..." : board.name} />
+      <BoardHeader
+        name={!board ? "loading..." : board.name}
+        clicked={() => setIsOpen(true)}
+      />
       <div className="flex p-6 gap-4 overflow-scroll max-w-full h-[90%]">
         {board?.columns.map((col) => {
           return (
@@ -57,6 +69,13 @@ const page: FC<pageProps> = ({ params }) => {
           <h1 className="text-2xl font-semibold capitalize">+ New column</h1>
         </div>
       </div>
+      <Modal
+        isOpen={isOpen}
+        className="left-0 flex place-items-center justify-center"
+        close={() => setIsOpen(false)}
+      >
+        <CreateNewTask ref={ref} cols={board.columns} />
+      </Modal>
     </div>
   );
 };

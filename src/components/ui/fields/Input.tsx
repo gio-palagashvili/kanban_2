@@ -1,9 +1,8 @@
 import { FC, InputHTMLAttributes, forwardRef } from "react";
 import { cn } from "@/lib/utils";
 import { cva, VariantProps } from "class-variance-authority";
-import Button from "./Button";
-import { IoCloseOutline } from "react-icons/io5";
-import Label from "./Label";
+import Button from "../Button";
+import Label from "../Label";
 
 export const inputVariants = cva("input font-semibold", {
   variants: {
@@ -24,6 +23,7 @@ interface InputProps
   isColumn?: boolean;
   label?: string;
   close?: () => void;
+  // ref: React.RefObject<HTMLInputElement>;
 }
 
 const Input: FC<InputProps> = forwardRef<HTMLInputElement, InputProps>(
@@ -51,21 +51,8 @@ const Input: FC<InputProps> = forwardRef<HTMLInputElement, InputProps>(
         <input
           className={cn(inputVariants({ variant, className }))}
           disabled={isLoading && showLoading}
-          ref={ref}
           {...props}
         />
-        <Button
-          variant={"x"}
-          className={cn(
-            isColumn ? "flex place-items-center p-0 w-9" : "hidden"
-          )}
-        >
-          <IoCloseOutline
-            onClick={close}
-            size={25}
-            className="stroke-gray-300 self-end ml-auto"
-          />
-        </Button>
       </>
     );
   }

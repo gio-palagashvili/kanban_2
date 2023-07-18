@@ -1,12 +1,13 @@
 "use client";
 import React, { RefObject, useEffect, useRef, useState } from "react";
 import Button from "./Button";
-import Input from "./Input";
+import Input from "./fields/Input";
 import { v4 as uuid } from "uuid";
 import { Toaster, toast } from "react-hot-toast";
 import Label from "./Label";
 import axios from "axios";
-import { Board } from "@/types/db";
+import Column from "./fields/Column";
+// import { Board } from "@/types/db";
 
 interface CreateNewBoardProps {
   ref: RefObject<HTMLDivElement>;
@@ -93,33 +94,26 @@ const CreateNewBoard = React.forwardRef<HTMLDivElement, CreateNewBoardProps>(
             />
           </div>
           <Label className="mt-2">Board Columns</Label>
-          <div className="w-full flex flex-col gap-2 h-fit pt-1 max-h-[7rem] overflow-y-scroll overflow-x-hidden">
+          <div className="w-full flex flex-col gap-2 h-fit py-1 max-h-[7rem] overflow-y-scroll overflow-x-hidden">
             {Cols.length === 0 ? (
               <Label className="opacity-70">No columns</Label>
             ) : (
               Cols.map((col) => {
                 return (
-                  <div
-                    className="w-full flex place-items-center ml-[1px]"
-                    key={col.id}
-                    ref={scrollRef}
-                  >
-                    <Input
-                      value={col.value}
-                      className="w-[90%]"
-                      close={() => removeCol(col.id)}
-                      isColumn={true}
+                  <div key={col.id} ref={scrollRef}>
+                    <Column
+                      className="ml-[1px]"
+                      IoCloseOutlineClick={() => removeCol(col.id)}
                       onChange={(e) => changeCol(e, col.id)}
                     />
                   </div>
                 );
               })
             )}
-            <a ref={scrollRef}></a>
           </div>
           <div className="">
             <Button
-              className="w-full mt-2 h-10 font-[500] text-sm"
+              size={"secondary"}
               variant={"secondary"}
               onClick={() => createCol()}
             >

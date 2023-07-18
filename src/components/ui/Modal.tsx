@@ -1,12 +1,24 @@
 import { cn } from "@/lib/utils";
-import { FC } from "react";
+import { FC, useEffect } from "react";
 
 interface ModalProps extends React.HTMLAttributes<HTMLDivElement> {
   children: React.ReactNode;
   isOpen: boolean;
+  close: () => void;
 }
 
-const Modal: FC<ModalProps> = ({ children, isOpen, ...props }) => {
+const Modal: FC<ModalProps> = ({ children, isOpen, close, ...props }) => {
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape" && close) {
+        close();
+      }
+    };
+    document.addEventListener("keydown", handleKeyDown);
+    return () => {
+      document.removeEventListener("keydown", handleKeyDown);
+    };
+  }, []);
   return (
     <div
       className={

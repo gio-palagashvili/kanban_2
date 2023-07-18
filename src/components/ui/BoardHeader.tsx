@@ -6,9 +6,10 @@ import { useOnClickOutside } from "@/hooks/useClickOutside";
 
 interface BoardHeaderProps {
   name?: string;
+  clicked: () => void;
 }
 
-const BoardHeader: FC<BoardHeaderProps> = ({ name }) => {
+const BoardHeader: FC<BoardHeaderProps> = ({ name, clicked }) => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
 
   const toggleDropdown = () => {
@@ -23,7 +24,7 @@ const BoardHeader: FC<BoardHeaderProps> = ({ name }) => {
     <div className="bg-main h-20 w-full hidden md:flex px-4 justify-between place-items-center">
       <h1 className="text-[22px] font-semibold">{name}</h1>
       <div className="flex justify-center place-items-center gap-3">
-        <Button size={"medium"} className="capitalize">
+        <Button size={"medium"} className="capitalize" onClick={clicked}>
           + add new Task
         </Button>
         <button className="relative" onClick={toggleDropdown}>

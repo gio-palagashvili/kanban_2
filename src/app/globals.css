@@ -14,3 +14,9 @@ body {
 .shadowbox {
   box-shadow: 0 10px 20px rgba(54, 78, 126, .25);
 }
+
+#customSel {
+  background: url('../assets/chevron.svg') no-repeat;
+  background-position: right 1rem top 50%;
+  position: relative;
+}

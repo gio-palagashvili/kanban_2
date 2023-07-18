@@ -11,7 +11,7 @@ import SignOut from "./SignOut";
 import Modal from "./ui/Modal";
 import CreateNewBoard from "./ui/CreateNewBoard";
 import axios from "axios";
-import { Board } from "@/types/db";
+// import { Board } from "@/types/db";
 import Label from "./ui/Label";
 import { usePathname, useRouter } from "next/navigation";
 import { useOnClickOutside } from "@/hooks/useClickOutside";
@@ -131,6 +131,7 @@ const Nav: FC<NavProps> = ({ session }) => {
         </div>
         <Modal
           isOpen={openBoard}
+          close={() => setOpenBoard(false)}
           className="top-0 md:left-0 -left-6 flex justify-center place-items-center"
         >
           <CreateNewBoard
