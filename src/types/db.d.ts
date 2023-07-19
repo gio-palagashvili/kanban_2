@@ -6,16 +6,16 @@ interface Board {
 }
 interface Column {
     id: string;
-    name: String;
+    name: string;
     Tasks: Task[]
 }
 interface Task {
     id: string;
-    name: String;
+    name: string;
     SubTasks: SubTask[]
 }
 interface SubTask {
     id: string;
-    name: String;
+    name: string;
     complete: boolean;
 }

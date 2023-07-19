@@ -68,11 +68,12 @@ model Column {
 }
 
 model Task {
-  id       Int       @id @default(autoincrement())
-  name     String
-  SubTasks SubTask[]
-  Column   Column?   @relation(fields: [columnId], references: [id])
-  columnId Int?
+  id          Int       @id @default(autoincrement())
+  name        String
+  description String
+  SubTasks    SubTask[]
+  Column      Column?   @relation(fields: [columnId], references: [id])
+  columnId    Int?
 
   @@unique([columnId, name])
 }

@@ -1,37 +1,30 @@
 "use client";
-import React, {
-  FC,
-  InputHTMLAttributes,
-  useEffect,
-  useRef,
-  useState,
-} from "react";
+import React, { FC, useEffect, useRef, useState } from "react";
 import Input from "@/components/ui/fields/Input";
 import Label from "@/components/ui/Label";
 import { v4 as uuid } from "uuid";
 import Column from "@/components/ui/fields/Column";
 import Button from "./Button";
+import { Toaster, toast } from "react-hot-toast";
+import axios from "axios";
+import { data } from "autoprefixer";
 
 interface CreateNewTaskProps {
   ref: React.MutableRefObject<HTMLDivElement | undefined>;
   cols: Column[];
+  setBoard: React.Dispatch<React.SetStateAction<Board | undefined>>;
+  close: () => void;
 }
 
 const CreateNewTask = React.forwardRef<HTMLDivElement, CreateNewTaskProps>(
-  ({ cols }, ref) => {
-    const [subTasks, setSubTasks] = useState<SubTask[]>([
-      {
-        id: uuid(),
-        name: "",
-        complete: false,
-      },
-    ]);
+  ({ cols, setBoard, close }, ref) => {
+    const [subTasks, setSubTasks] = useState<SubTask[]>([]);
     const [data, setData] = useState<{
-      status: string;
+      currentColumn: string;
       description: string;
       name: string;
     }>({
-      status: cols[0].id,
+      currentColumn: cols[0].id,
       description: "",
       name: "",
     });
@@ -75,7 +68,6 @@ const CreateNewTask = React.forwardRef<HTMLDivElement, CreateNewTaskProps>(
         | React.ChangeEvent<HTMLSelectElement>
         | React.ChangeEvent<HTMLInputElement>
     ) => {
-      console.log(e.target.value);
       setData((prev) => {
         return { ...prev, [e.target.name]: e.target.value };
       });
@@ -89,11 +81,53 @@ const CreateNewTask = React.forwardRef<HTMLDivElement, CreateNewTaskProps>(
       }
     }, [subTasks]);
 
+    const clearState = () => {
+      setData({
+        currentColumn: cols[0].id,
+        description: "",
+        name: "",
+      });
+      setSubTasks([]);
+    };
+    const submit = () => {
+      if (data.name.length === 0) {
+        toast.error("name is required");
+        return;
+      }
+
+      axios
+        .post("/api/task/create", {
+          task: data,
+          subTasks: subTasks,
+        })
+        .then((data) => {
+          const act = data.data;
+          setBoard((prev) => {
+            return {
+              ...prev,
+              columns: prev?.columns.map((col) => {
+                if (col.id === data.data.columnId) {
+                  col.Tasks.push({ ...act, SubTasks: [] });
+                }
+                return col;
+              }),
+            };
+          });
+
+          clearState();
+          close();
+        })
+        .catch((err) => {
+          toast.error(err.response.data);
+        });
+    };
+
     return (
       <div
         ref={ref}
         className="bg-main max-h-[90vh] overflow-y-scroll p-8 w-[30rem] rounded-md shadow-md flex flex-col gap-5"
       >
+        <Toaster position="bottom-right" />
         <h1 className="text-xl font-semibold">Add new task</h1>
         <div className="flex flex-col gap-4">
           <div>
@@ -136,7 +170,7 @@ const CreateNewTask = React.forwardRef<HTMLDivElement, CreateNewTaskProps>(
                 })
               ) : (
                 <Label className="opacity-70 text-[10px]">
-                  add atleast one sub-task
+                  click the button to add a sub-task
                 </Label>
               )}
             </div>
@@ -145,13 +179,13 @@ const CreateNewTask = React.forwardRef<HTMLDivElement, CreateNewTaskProps>(
             </Button>
           </div>
           <div>
-            <Label>Current status</Label>
+            <Label>Select column</Label>
             <select
               onChange={(e) => {
-                console.log(e.target.value);
+                changeHandler(e);
               }}
               id="customSel"
-              name="status"
+              name="currentColumn"
               className="p-1 bg-transparent font-[500] appearance-none placeholder-gray-500/70 border-[1px] text-xs pl-3 border-gray-500/40 rounded-md outline-none focus:ring-1 focus:ring-mainPurple h-10 w-full"
             >
               {cols.map((col) => {
@@ -163,7 +197,9 @@ const CreateNewTask = React.forwardRef<HTMLDivElement, CreateNewTaskProps>(
               })}
             </select>
           </div>
-          <Button size={"secondary"}>Create Task</Button>
+          <Button size={"secondary"} onClick={() => submit()}>
+            Create Task
+          </Button>
         </div>
       </div>
     );

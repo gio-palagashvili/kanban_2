@@ -85,8 +85,8 @@ const Nav: FC<NavProps> = ({ session }) => {
             ref={ref}
             className={
               Open
-                ? "flex z-20 flex-col gap-4 nav p-4 shadowbox md:w-full md:p-0 absolute w-[90%] bg-main rounded-lg left-1/2 transform -translate-x-1/2 top-[10vh]"
-                : "hidden flex-col gap-4 nav md:w-full md:p-0 md:flex"
+                ? "flex z-20 flex-col nav p-4 shadowbox md:w-full md:p-0 absolute w-[90%] bg-main rounded-lg left-1/2 transform -translate-x-1/2 top-[10vh]"
+                : "hidden flex-col nav md:w-full md:p-0 md:flex"
             }
           >
             <div className="">
@@ -94,7 +94,7 @@ const Nav: FC<NavProps> = ({ session }) => {
                 All boards (3)
               </p>
             </div>
-            <div className="boards flex flex-col font-bold overflow-y-scroll max-h-[353px]">
+            <div className="boards flex flex-col font-bold overflow-y-scroll max-h-[353px] mt-2">
               {boards.length >= 1 ? (
                 boards.map((board, index) => {
                   if (path.split("/")[2] == board.id) {
