@@ -23,15 +23,26 @@ const ColumnListItem: FC<ColumnListItemProps> = forwardRef(
           className="flex flex-col gap-2 mt-4 h-[90%] overflow-y-scroll"
           id="tasks_container_list"
         >
-          {col.Tasks.map((task) => {
+          {col.Tasks.map((task, index) => {
             const subTaskComp = task.SubTasks.filter((task) => task.complete);
             return (
-              <TaskItem
+              <Draggable
                 key={task.id}
-                avilable={task.SubTasks.length}
-                complete={subTaskComp.length}
-                name={task.name}
-              />
+                draggableId={`draggable_${task.id}`}
+                index={index}
+              >
+                {(provided) => (
+                  <TaskItem
+                    key={`task_${task.id}`}
+                    {...provided.draggableProps}
+                    {...provided.dragHandleProps}
+                    ref={provided.innerRef}
+                    avilable={task.SubTasks.length}
+                    complete={subTaskComp.length}
+                    name={task.name}
+                  />
+                )}
+              </Draggable>
             );
           })}
         </div>
