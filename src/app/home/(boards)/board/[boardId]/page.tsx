@@ -7,7 +7,13 @@ import axios from "axios";
 import { redirect } from "next/navigation";
 import { FC, useEffect, useRef, useState } from "react";
 import ColumnListItem from "@/components/list/ColumnListItem";
-import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
+import { v4 as uuid } from "uuid";
+import {
+  DragDropContext,
+  Droppable,
+  Draggable,
+  DropResult,
+} from "react-beautiful-dnd";
 
 interface pageProps {
   params: {
@@ -75,20 +81,37 @@ const page: FC<pageProps> = ({ params }) => {
       });
   }, []);
 
+  const handleDrag = (res: DropResult) => {
+    console.log(res);
+    const dest = board?.columns.map((col) => {
+      return col.id.toString() === res.destination?.droppableId;
+    });
+  };
+
   return (
     <div className="h-full flex flex-col w-full overflow-scroll">
       <BoardHeader
         name={!board ? "loading..." : board.name}
         clicked={() => setIsOpen(true)}
       />
-      <div className="flex p-6 gap-4 h-[90%] overflow-scroll">
-        <DragDropContext onDragEnd={(res) => console.log(res)}>
-          {board?.columns.map((col) => {
-            return <ColumnListItem col={col} key={col.id} />;
-          })}
-        </DragDropContext>
+      <div className="flex p-6 gap-4 h-[90%] overflow-scroll ">
+        {board?.columns.map((col) => {
+          return (
+            <DragDropContext key={col.id} onDragEnd={(e) => console.log(e)}>
+              <Droppable droppableId={`dropable_${col.id}`}>
+                {(provided) => (
+                  <ColumnListItem
+                    col={col}
+                    ref={provided.innerRef}
+                    {...provided.droppableProps}
+                  />
+                )}
+              </Droppable>
+            </DragDropContext>
+          );
+        })}
         <div className="bg-main/20 rounded-md flex-none w-[20rem] flex justify-center place-items-center text-mainText hover:text-mainPurple cursor-pointer">
-          <h1 className="text-2xl font-semibold capitalize">+ New column</h1>d
+          <h1 className="text-2xl font-semibold capitalize">+ New column</h1>
         </div>
       </div>
       <Modal
