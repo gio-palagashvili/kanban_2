@@ -26,11 +26,7 @@ const ColumnListItem: FC<ColumnListItemProps> = forwardRef(
           {col.Tasks.map((task, index) => {
             const subTaskComp = task.SubTasks.filter((task) => task.complete);
             return (
-              <Draggable
-                key={task.id}
-                draggableId={`draggable_${task.id}`}
-                index={index}
-              >
+              <Draggable key={task.id} draggableId={`${task.id}`} index={index}>
                 {(provided) => (
                   <TaskItem
                     key={`task_${task.id}`}

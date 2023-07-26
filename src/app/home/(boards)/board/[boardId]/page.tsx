@@ -7,13 +7,7 @@ import axios from "axios";
 import { redirect } from "next/navigation";
 import { FC, useEffect, useRef, useState } from "react";
 import ColumnListItem from "@/components/list/ColumnListItem";
-import { v4 as uuid } from "uuid";
-import {
-  DragDropContext,
-  Droppable,
-  Draggable,
-  DropResult,
-} from "react-beautiful-dnd";
+import { DragDropContext, Droppable, DropResult } from "react-beautiful-dnd";
 
 interface pageProps {
   params: {
@@ -82,10 +76,86 @@ const page: FC<pageProps> = ({ params }) => {
   }, []);
 
   const handleDrag = (res: DropResult) => {
-    console.log(res);
-    const dest = board?.columns.map((col) => {
-      return col.id.toString() === res.destination?.droppableId;
-    });
+    const colIndexSrc: number = parseInt(res.source.droppableId.split("_")[1]);
+    const colIndexDest: number = res.destination
+      ? parseInt(res.destination.droppableId.split("_")[1])
+      : -1;
+    const taskIndexSrc = res.source.index;
+    const taskIndexDest = res.destination?.index;
+
+    if (
+      colIndexDest !== undefined &&
+      colIndexSrc !== colIndexDest &&
+      taskIndexSrc !== undefined &&
+      board &&
+      board.columns[colIndexDest] &&
+      board.columns[colIndexSrc]
+    ) {
+      const movedTask = board.columns[colIndexSrc].Tasks[taskIndexSrc];
+
+      const updatedSourceTasks = Array.from(board.columns[colIndexSrc].Tasks);
+      updatedSourceTasks.splice(taskIndexSrc, 1);
+
+      const updatedDestinationTasks = Array.from(
+        board.columns[colIndexDest].Tasks
+      );
+      updatedDestinationTasks.splice(
+        taskIndexDest !== undefined ? taskIndexDest : 0,
+        0,
+        movedTask
+      );
+
+      const updatedSourceColumn = {
+        ...board.columns[colIndexSrc],
+        Tasks: updatedSourceTasks,
+      };
+
+      const updatedDestinationColumn = {
+        ...board.columns[colIndexDest],
+        Tasks: updatedDestinationTasks,
+      };
+
+      const updatedColumns = board.columns.map((col, index) =>
+        index === colIndexSrc
+          ? updatedSourceColumn
+          : index === colIndexDest
+          ? updatedDestinationColumn
+          : col
+      );
+
+      const updatedBoard = {
+        ...board,
+        columns: updatedColumns,
+      };
+
+      setBoard(updatedBoard);
+    } else if (
+      colIndexSrc === colIndexDest &&
+      taskIndexSrc !== undefined &&
+      taskIndexDest !== undefined &&
+      board &&
+      board.columns[colIndexSrc]
+    ) {
+      const updatedTasks = Array.from(board.columns[colIndexSrc].Tasks);
+      const movedTask = updatedTasks.splice(taskIndexSrc, 1)[0];
+      updatedTasks.splice(taskIndexDest, 0, movedTask);
+
+      const updatedColumn = {
+        ...board.columns[colIndexSrc],
+        Tasks: updatedTasks,
+      };
+
+      const updatedColumns = board.columns.map((col, index) =>
+        index === colIndexSrc ? updatedColumn : col
+      );
+
+      const updatedBoard = {
+        ...board,
+        columns: updatedColumns,
+      };
+
+      setBoard(updatedBoard);
+    }
   };
 
   return (
@@ -95,10 +165,13 @@ const page: FC<pageProps> = ({ params }) => {
         clicked={() => setIsOpen(true)}
       />
       <div className="flex p-6 gap-4 h-[90%] overflow-scroll ">
-        {board?.columns.map((col) => {
-          return (
-            <DragDropContext key={col.id} onDragEnd={(e) => console.log(e)}>
-              <Droppable droppableId={`dropable_${col.id}`}>
+        <DragDropContext onDragEnd={(e) => handleDrag(e)}>
+          {board?.columns.map((col, index) => {
+            return (
+              <Droppable
+                droppableId={`${col.id}_${index}`}
+                key={`dropable_${col.id}`}
+              >
                 {(provided) => (
                   <ColumnListItem
                     col={col}
@@ -107,9 +180,9 @@ const page: FC<pageProps> = ({ params }) => {
                   />
                 )}
               </Droppable>
-            </DragDropContext>
-          );
-        })}
+            );
+          })}
+        </DragDropContext>
         <div className="bg-main/20 rounded-md flex-none w-[20rem] flex justify-center place-items-center text-mainText hover:text-mainPurple cursor-pointer">
           <h1 className="text-2xl font-semibold capitalize">+ New column</h1>
         </div>
