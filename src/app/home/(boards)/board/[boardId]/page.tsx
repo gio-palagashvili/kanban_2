@@ -87,6 +87,7 @@ const page: FC<pageProps> = ({ params }) => {
       colIndexDest !== undefined &&
       colIndexSrc !== colIndexDest &&
       taskIndexSrc !== undefined &&
+      taskIndexDest !== undefined &&
       board &&
       board.columns[colIndexDest] &&
       board.columns[colIndexSrc]
@@ -99,11 +100,7 @@ const page: FC<pageProps> = ({ params }) => {
       const updatedDestinationTasks = Array.from(
         board.columns[colIndexDest].Tasks
       );
-      updatedDestinationTasks.splice(
-        taskIndexDest !== undefined ? taskIndexDest : 0,
-        0,
-        movedTask
-      );
+      updatedDestinationTasks.splice(taskIndexDest, 0, movedTask);
 
       const updatedSourceColumn = {
         ...board.columns[colIndexSrc],
