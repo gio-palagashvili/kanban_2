@@ -4,7 +4,7 @@ import Input from "@/components/ui/fields/Input";
 import Label from "@/components/ui/Label";
 import { v4 as uuid } from "uuid";
 import Column from "@/components/ui/fields/Column";
-import Button from "./Button";
+import Button from "./ui/Button";
 import { Toaster, toast } from "react-hot-toast";
 import axios from "axios";
 import { data } from "autoprefixer";

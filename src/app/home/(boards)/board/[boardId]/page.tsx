@@ -1,6 +1,6 @@
 "use client";
 import BoardHeader from "@/components/ui/BoardHeader";
-import CreateNewTask from "@/components/ui/CreateNewTask";
+import CreateNewTask from "@/components/CreateNewTask";
 import Modal from "@/components/ui/Modal";
 import { useOnClickOutside } from "@/hooks/useClickOutside";
 import axios from "axios";
@@ -25,45 +25,6 @@ const page: FC<pageProps> = ({ params }) => {
     setIsOpen(false);
   });
 
-  // const [board, setBoard] = useState<Board>({
-  //   id: "2",
-  //   columns: [
-  //     {
-  //       id: "z",
-  //       name: "todo",
-  //       Tasks: [
-  //         {
-  //           id: "2",
-  //           name: "lala",
-  //           SubTasks: [
-  //             { id: "1", name: "bruh", complete: false },
-  //             { id: "2", name: "bruh", complete: true },
-  //           ],
-  //         },
-  //         {
-  //           id: "3",
-  //           name: "smoke that wee",
-  //           SubTasks: [],
-  //         },
-  //       ],
-  //     },
-  //     {
-  //       id: "k",
-  //       name: "todo",
-  //       Tasks: [
-  //         {
-  //           id: "4",
-  //           name: "do the thng",
-  //           SubTasks: [],
-  //         },
-  //       ],
-  //     },
-  //     { id: "a", name: "done", Tasks: [] },
-  //   ],
-  //   name: "test",
-  //   userId: "1",
-  // });
-
   useEffect(() => {
     axios
       .get(`/api/board/${boardId}`)
@@ -84,8 +45,8 @@ const page: FC<pageProps> = ({ params }) => {
     const taskIndexDest = res.destination?.index;
 
     if (
-      colIndexDest !== undefined &&
       colIndexSrc !== colIndexDest &&
+      colIndexDest !== undefined &&
       taskIndexSrc !== undefined &&
       taskIndexDest !== undefined &&
       board &&
@@ -93,6 +54,7 @@ const page: FC<pageProps> = ({ params }) => {
       board.columns[colIndexSrc]
     ) {
       const movedTask = board.columns[colIndexSrc].Tasks[taskIndexSrc];
+      const failSafe: Board = { ...board };
 
       const updatedSourceTasks = Array.from(board.columns[colIndexSrc].Tasks);
       updatedSourceTasks.splice(taskIndexSrc, 1);
@@ -124,6 +86,16 @@ const page: FC<pageProps> = ({ params }) => {
         ...board,
         columns: updatedColumns,
       };
+
+      axios
+        .post("/api/task/update", {
+          board: updatedBoard,
+          task: movedTask,
+          destColId: updatedDestinationColumn.id,
+        })
+        .catch((err) => {
+          setBoard(failSafe);
+        });
 
       setBoard(updatedBoard);
     } else if (

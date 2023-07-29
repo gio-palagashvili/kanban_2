@@ -1,12 +1,12 @@
 "use client";
 import React, { RefObject, useEffect, useRef, useState } from "react";
-import Button from "./Button";
-import Input from "./fields/Input";
+import Button from "./ui/Button";
+import Input from "./ui/fields/Input";
 import { v4 as uuid } from "uuid";
 import { Toaster, toast } from "react-hot-toast";
-import Label from "./Label";
+import Label from "./ui/Label";
 import axios from "axios";
-import Column from "./fields/Column";
+import Column from "./ui/fields/Column";
 // import { Board } from "@/types/db";
 
 interface CreateNewBoardProps {

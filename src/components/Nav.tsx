@@ -9,7 +9,7 @@ import Logo from "./ui/Logo";
 import { Session } from "next-auth";
 import SignOut from "./SignOut";
 import Modal from "./ui/Modal";
-import CreateNewBoard from "./ui/CreateNewBoard";
+import CreateNewBoard from "./CreateNewBoard";
 import axios from "axios";
 // import { Board } from "@/types/db";
 import Label from "./ui/Label";
