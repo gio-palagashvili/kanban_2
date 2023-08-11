@@ -15,13 +15,13 @@ export const GET = async (req: any, res: NextApiResponse) => {
                         Tasks: {
                             include: {
                                 SubTasks: true
-                            }
+                            },
+                            orderBy: { index: 'asc' }
                         }
                     }
                 }
             }
         })
-
         return new Response(JSON.stringify(board))
     } catch (error) {
         return new Response(JSON.stringify(error))

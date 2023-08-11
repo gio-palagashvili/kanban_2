@@ -58,22 +58,25 @@ model Board {
 }
 
 model Column {
-  id      Int    @id @default(autoincrement())
-  name    String
-  Board   Board? @relation(fields: [boardId], references: [id])
-  Tasks   Task[]
-  boardId Int?
+  id        Int      @id @default(autoincrement())
+  name      String
+  Board     Board?   @relation(fields: [boardId], references: [id])
+  Tasks     Task[]
+  boardId   Int?
+  createdAt DateTime @default(now())
 
   @@unique([boardId, name])
 }
 
 model Task {
   id          Int       @id @default(autoincrement())
+  index       Int       @default(0)
   name        String
   description String
   SubTasks    SubTask[]
   Column      Column?   @relation(fields: [columnId], references: [id])
   columnId    Int?
+  createdAt   DateTime  @default(now())
 
   @@unique([columnId, name])
 }

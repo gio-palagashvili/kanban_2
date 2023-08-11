@@ -21,10 +21,7 @@ const CreateNewBoard = React.forwardRef<HTMLDivElement, CreateNewBoardProps>(
     const [name, setName] = useState<string>("");
     const [isLoading, setIsLoading] = useState<boolean>(false);
 
-    const [Cols, SetCols] = useState([
-      { id: uuid(), value: "todo" },
-      { id: uuid(), value: "doing" },
-    ]);
+    const [Cols, SetCols] = useState([{ id: uuid(), value: "todo" }]);
 
     useEffect(() => {
       if (scrollRef.current) {

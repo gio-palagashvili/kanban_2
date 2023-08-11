@@ -91,7 +91,7 @@ const Nav: FC<NavProps> = ({ session }) => {
           >
             <div className="">
               <p className="text-[#848FA1] text-[13px] uppercase pl-6 z">
-                All boards (3)
+                All boards ({boards.length})
               </p>
             </div>
             <div className="boards flex flex-col font-bold overflow-y-scroll max-h-[353px] mt-2">

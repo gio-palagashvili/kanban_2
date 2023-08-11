@@ -54,6 +54,7 @@ CREATE TABLE "Column" (
     "id" SERIAL NOT NULL,
     "name" TEXT NOT NULL,
     "boardId" INTEGER,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
     CONSTRAINT "Column_pkey" PRIMARY KEY ("id")
 );
@@ -61,8 +62,11 @@ CREATE TABLE "Column" (
 -- CreateTable
 CREATE TABLE "Task" (
     "id" SERIAL NOT NULL,
+    "index" INTEGER NOT NULL DEFAULT 0,
     "name" TEXT NOT NULL,
+    "description" TEXT NOT NULL,
     "columnId" INTEGER,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
     CONSTRAINT "Task_pkey" PRIMARY KEY ("id")
 );
