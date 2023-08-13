@@ -42,7 +42,7 @@ const page: FC<pageProps> = ({ params }) => {
       ? parseInt(res.destination.droppableId.split("_")[1])
       : -1;
     const taskIndexSrc = res.source.index;
-    const taskIndexDest = res.destination?.index;
+    const taskIndexDest = res.destination!.index;
 
     if (
       colIndexSrc !== colIndexDest &&
@@ -86,12 +86,18 @@ const page: FC<pageProps> = ({ params }) => {
         ...board,
         columns: updatedColumns,
       };
+      console.log(
+        board.columns[parseInt(res.source.droppableId.split("_")[1])].Tasks
+      );
 
       axios
-        .post("/api/task/update", {
+        .post("/api/task/move", {
           board: updatedBoard,
           task: movedTask,
           destColId: updatedDestinationColumn.id,
+          domestic: false,
+          drag: res,
+          draggedDestId: movedTask.id,
         })
         .catch((err) => {
           setBoard(failSafe);
@@ -105,6 +111,7 @@ const page: FC<pageProps> = ({ params }) => {
       board &&
       board.columns[colIndexSrc]
     ) {
+      const failSafe: Board = { ...board };
       const updatedTasks = Array.from(board.columns[colIndexSrc].Tasks);
       const movedTask = updatedTasks.splice(taskIndexSrc, 1)[0];
       updatedTasks.splice(taskIndexDest, 0, movedTask);
@@ -122,8 +129,20 @@ const page: FC<pageProps> = ({ params }) => {
         ...board,
         columns: updatedColumns,
       };
-
       setBoard(updatedBoard);
+
+      axios
+        .post("/api/task/move", {
+          board: updatedBoard,
+          task: movedTask,
+          destColId: "",
+          domestic: true,
+          drag: res,
+          draggedDestId: board.columns[colIndexSrc].Tasks[taskIndexDest].id,
+        })
+        .catch((err) => {
+          setBoard(failSafe);
+        });
     }
   };
 

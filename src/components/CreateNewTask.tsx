@@ -19,6 +19,7 @@ interface CreateNewTaskProps {
 const CreateNewTask = React.forwardRef<HTMLDivElement, CreateNewTaskProps>(
   ({ cols, setBoard, close }, ref) => {
     const [subTasks, setSubTasks] = useState<SubTask[]>([]);
+    const [isLoading, setIsLoading] = useState<boolean>(false);
     const [data, setData] = useState<{
       currentColumn: string;
       description: string;
@@ -94,11 +95,12 @@ const CreateNewTask = React.forwardRef<HTMLDivElement, CreateNewTaskProps>(
         toast.error("name is required");
         return;
       }
-
+      setIsLoading(true);
       axios
         .post("/api/task/create", {
           task: data,
           subTasks: subTasks,
+          index: data.currentColumn,
         })
         .then((data) => {
           const act = data.data;
@@ -119,6 +121,9 @@ const CreateNewTask = React.forwardRef<HTMLDivElement, CreateNewTaskProps>(
         })
         .catch((err) => {
           toast.error(err.response.data);
+        })
+        .finally(() => {
+          setIsLoading(false);
         });
     };
 
@@ -134,6 +139,7 @@ const CreateNewTask = React.forwardRef<HTMLDivElement, CreateNewTaskProps>(
             <Input
               label="Task name"
               placeholder="e.g coffe break"
+              value={data.name}
               name="name"
               onChange={(e) => {
                 changeHandler(e);
@@ -146,6 +152,7 @@ const CreateNewTask = React.forwardRef<HTMLDivElement, CreateNewTaskProps>(
               cols={30}
               name="description"
               rows={10}
+              value={data.description}
               onChange={(e) => {
                 changeHandler(e);
               }}
@@ -188,16 +195,20 @@ const CreateNewTask = React.forwardRef<HTMLDivElement, CreateNewTaskProps>(
               name="currentColumn"
               className="p-1 bg-transparent font-[500] appearance-none placeholder-gray-500/70 border-[1px] text-xs pl-3 border-gray-500/40 rounded-md outline-none focus:ring-1 focus:ring-mainPurple h-10 w-full"
             >
-              {cols.map((col) => {
+              {cols.map((col, index) => {
                 return (
-                  <option key={col.id} value={col.id}>
+                  <option key={index} value={col.id}>
                     {col.name}
                   </option>
                 );
               })}
             </select>
           </div>
-          <Button size={"secondary"} onClick={() => submit()}>
+          <Button
+            size={"secondary"}
+            onClick={() => submit()}
+            isLoading={isLoading}
+          >
             Create Task
           </Button>
         </div>

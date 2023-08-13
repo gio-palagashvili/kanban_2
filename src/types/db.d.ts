@@ -11,6 +11,7 @@ interface Column {
 }
 interface Task {
     id: string;
+    index: Number;
     name: string;
     SubTasks: SubTask[]
 }
