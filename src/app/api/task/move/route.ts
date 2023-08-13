@@ -9,7 +9,7 @@ interface IBody {
     task: Task,
     domestic: boolean
     drag: DropResult,
-    draggedDestId: string
+    draggedDest: Task,
 }
 
 export const POST = async (req: Request, res: NextApiResponse) => {
@@ -17,7 +17,7 @@ export const POST = async (req: Request, res: NextApiResponse) => {
         const session = await getServerSession(authOptions);
         if (!session) return new Response("", { status: 401 });
 
-        const { board, task, domestic, drag, draggedDestId }: IBody = await req.json();
+        const { board, task, domestic, drag, draggedDest }: IBody = await req.json();
         const isAllowed: number = await db.board.count({
             where: {
                 userId: session.user.id,
@@ -32,10 +32,10 @@ export const POST = async (req: Request, res: NextApiResponse) => {
         }
         const destIndex = drag.destination?.index;
         const srcIndex = drag.source?.index;
-
+        console.log(destIndex);
         if (!domestic) {
-            await db.$transaction([
-                db.task.update({
+            await db.$transaction(async () => {
+                await db.task.update({
                     where: {
                         id: parseInt(task.id)
                     },
@@ -43,16 +43,19 @@ export const POST = async (req: Request, res: NextApiResponse) => {
                         columnId: parseInt(drag.destination!.droppableId.split('_')[0]),
                         index: destIndex
                     }
-                }),
-                // db.task.update({
-                //     where: {
-                //         id: parseInt(draggedDestId)
-                //     },
-                //     data: {
-                //         index: srcIndex
-                //     }
-                // })
-            ])
+                });
+                if (draggedDest && destIndex) {
+                    await db.task.update({
+                        where: {
+                            id: parseInt(draggedDest.id)
+                        },
+                        data: {
+                            index: destIndex + 1
+                        }
+                    });
+                }
+            });
+
         } else {
             if (!drag) return new Response('Error dragging', { status: 400 })
 
@@ -67,7 +70,7 @@ export const POST = async (req: Request, res: NextApiResponse) => {
                 }),
                 db.task.update({
                     where: {
-                        id: parseInt(draggedDestId)
+                        id: parseInt(draggedDest.id)
                     },
                     data: {
                         index: srcIndex
@@ -75,9 +78,8 @@ export const POST = async (req: Request, res: NextApiResponse) => {
                 })
             ]);
         }
-
         return new Response('')
     } catch (error) {
-        console.log(error);
+        return new Response('')
     }
 }

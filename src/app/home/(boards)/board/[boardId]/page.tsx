@@ -86,18 +86,16 @@ const page: FC<pageProps> = ({ params }) => {
         ...board,
         columns: updatedColumns,
       };
-      console.log(
-        board.columns[parseInt(res.source.droppableId.split("_")[1])].Tasks
-      );
+      const destTask =
+        board.columns[colIndexDest].Tasks[res.destination!.index];
 
       axios
         .post("/api/task/move", {
           board: updatedBoard,
           task: movedTask,
-          destColId: updatedDestinationColumn.id,
           domestic: false,
           drag: res,
-          draggedDestId: movedTask.id,
+          draggedDest: destTask,
         })
         .catch((err) => {
           setBoard(failSafe);
@@ -124,7 +122,6 @@ const page: FC<pageProps> = ({ params }) => {
       const updatedColumns = board.columns.map((col, index) =>
         index === colIndexSrc ? updatedColumn : col
       );
-
       const updatedBoard = {
         ...board,
         columns: updatedColumns,
@@ -138,7 +135,7 @@ const page: FC<pageProps> = ({ params }) => {
           destColId: "",
           domestic: true,
           drag: res,
-          draggedDestId: board.columns[colIndexSrc].Tasks[taskIndexDest].id,
+          draggedDestId: board.columns[colIndexSrc].Tasks[taskIndexDest],
         })
         .catch((err) => {
           setBoard(failSafe);
