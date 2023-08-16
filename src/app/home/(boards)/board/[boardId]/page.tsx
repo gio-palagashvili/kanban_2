@@ -8,6 +8,7 @@ import { redirect } from "next/navigation";
 import { FC, useEffect, useRef, useState } from "react";
 import ColumnListItem from "@/components/list/ColumnListItem";
 import { DragDropContext, Droppable, DropResult } from "react-beautiful-dnd";
+import CreateNewCol from "@/components/CreateNewCol";
 
 interface pageProps {
   params: {
@@ -18,11 +19,16 @@ interface pageProps {
 const page: FC<pageProps> = ({ params }) => {
   const { boardId } = params;
   const [isOpen, setIsOpen] = useState<boolean>(false);
+  const [openCreateCol, setOpenCreateCol] = useState<boolean>(false);
   const [board, setBoard] = useState<Board>();
   const ref = useRef<HTMLDivElement>(null);
+  const refCol = useRef<HTMLDivElement>(null);
 
   useOnClickOutside(ref, () => {
     setIsOpen(false);
+  });
+  useOnClickOutside(refCol, () => {
+    setOpenCreateCol(false);
   });
 
   useEffect(() => {
@@ -143,6 +149,12 @@ const page: FC<pageProps> = ({ params }) => {
     }
   };
 
+  const addNewColumn = (col: Column) => {
+    setBoard((prev) => {
+      return { ...prev, columns: [...prev!.columns, col] };
+    });
+  };
+
   return (
     <div className="h-full flex flex-col w-full overflow-scroll">
       <BoardHeader
@@ -168,10 +180,25 @@ const page: FC<pageProps> = ({ params }) => {
             );
           })}
         </DragDropContext>
-        <div className="bg-main/20 rounded-md flex-none w-[20rem] flex justify-center place-items-center text-mainText hover:text-mainPurple cursor-pointer">
+        <button
+          onClick={() => setOpenCreateCol(true)}
+          className="bg-main/20 rounded-md flex-none w-[20rem] flex justify-center place-items-center text-mainText hover:text-mainPurple cursor-pointer"
+        >
           <h1 className="text-2xl font-semibold capitalize">+ New column</h1>
-        </div>
+        </button>
       </div>
+      <Modal
+        isOpen={openCreateCol}
+        close={() => setOpenCreateCol(false)}
+        className="left-0 top-0 h-[100vh] flex place-items-center justify-center"
+      >
+        <CreateNewCol
+          ref={refCol}
+          addNewColumn={addNewColumn}
+          close={() => setOpenCreateCol(false)}
+          boardId={boardId}
+        />
+      </Modal>
       <Modal
         isOpen={isOpen}
         className="left-0 top-0 h-[100vh] flex place-items-center justify-center"

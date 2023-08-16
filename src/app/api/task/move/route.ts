@@ -32,7 +32,7 @@ export const POST = async (req: Request, res: NextApiResponse) => {
         }
         const destIndex = drag.destination?.index;
         const srcIndex = drag.source?.index;
-        console.log(destIndex);
+
         if (!domestic) {
             await db.$transaction(async () => {
                 await db.task.update({

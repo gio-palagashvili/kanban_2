@@ -6,8 +6,7 @@ import { v4 as uuid } from "uuid";
 import { Toaster, toast } from "react-hot-toast";
 import Label from "./ui/Label";
 import axios from "axios";
-import Column from "./ui/fields/Column";
-// import { Board } from "@/types/db";
+import Column from "@/components/ui/fields/Column";
 
 interface CreateNewBoardProps {
   ref: RefObject<HTMLDivElement>;
@@ -52,6 +51,10 @@ const CreateNewBoard = React.forwardRef<HTMLDivElement, CreateNewBoardProps>(
     const sub = () => {
       if (name.length === 0) {
         toast.error("name can't be empty");
+        return;
+      }
+      if (Cols.length === 0) {
+        toast.error("Add minimum one column");
         return;
       }
       setIsLoading(true);
