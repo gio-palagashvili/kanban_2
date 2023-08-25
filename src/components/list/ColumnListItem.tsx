@@ -1,6 +1,6 @@
 import { FC, Ref, forwardRef } from "react";
 import TaskItem from "./task/TaskItem";
-import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
+import { Draggable } from "react-beautiful-dnd";
 
 interface ColumnListItemProps {
   col: Column;

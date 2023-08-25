@@ -3,14 +3,18 @@ import { FC, useRef, useState } from "react";
 import Button from "./Button";
 import { LuMoreVertical } from "react-icons/lu";
 import { useOnClickOutside } from "@/hooks/useClickOutside";
+import axios from "axios";
+import { useRouter } from "next/navigation";
 
 interface BoardHeaderProps {
   name?: string;
+  boardId: string;
   clicked: () => void;
 }
 
-const BoardHeader: FC<BoardHeaderProps> = ({ name, clicked }) => {
+const BoardHeader: FC<BoardHeaderProps> = ({ name, clicked, boardId }) => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
+  const router = useRouter();
 
   const toggleDropdown = () => {
     setIsOpen((prev) => !prev);
@@ -19,6 +23,12 @@ const BoardHeader: FC<BoardHeaderProps> = ({ name, clicked }) => {
   useOnClickOutside(ref, () => {
     setIsOpen(false);
   });
+
+  const deleteBoard = () => {
+    axios.delete("/api/board/delete", { data: { boardId } }).then(() => {
+      router.push("/home");
+    });
+  };
 
   return (
     <div className="bg-main h-20 w-full hidden md:flex px-4 justify-between place-items-center">
@@ -40,10 +50,13 @@ const BoardHeader: FC<BoardHeaderProps> = ({ name, clicked }) => {
                 : "hidden"
             }
           >
-            <h1 className="hover:underline">Edit board</h1>
-            <h1 className="text-red-500 mt-auto hover:underline">
+            <a className="hover:underline text-left">Edit board</a>
+            <a
+              className="text-red-500 mt-auto hover:underline text-left"
+              onClick={() => deleteBoard()}
+            >
               Delete board
-            </h1>
+            </a>
           </div>
         </button>
       </div>

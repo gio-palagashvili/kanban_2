@@ -159,6 +159,7 @@ const page: FC<pageProps> = ({ params }) => {
     <div className="h-full flex flex-col w-full overflow-scroll">
       <BoardHeader
         name={!board ? "loading..." : board.name}
+        boardId={boardId}
         clicked={() => setIsOpen(true)}
       />
       <div className="flex p-6 gap-4 h-[90%] overflow-scroll ">
