@@ -187,6 +187,7 @@ const CreateNewTask = React.forwardRef<HTMLDivElement, CreateNewTaskProps>(
           </div>
           <div>
             <Label>Select column</Label>
+            {/* //todo */}
             <select
               onChange={(e) => {
                 changeHandler(e);

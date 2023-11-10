@@ -16,8 +16,10 @@ const buttonvariants = cva(
       variant: {
         main: "bg-mainPurple font-bold hover:bg-[#5451a8] duration-300 rounded-full",
         secondary:
-          "bg-white text-mainPurple font-bold duration-300 rounded-full",
+          "bg-white text-mainPurple font-bold duration-300 rounded-full hover:bg-white/80",
         x: "p-0",
+        warning:
+          "bg-red-500 font-bold hover:bg-red-500/80 duration-300 rounded-full",
       },
       size: {
         small: "p-3 w-12",

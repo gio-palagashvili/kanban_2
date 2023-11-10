@@ -2,9 +2,11 @@
 import { FC, useRef, useState } from "react";
 import Button from "./Button";
 import { LuMoreVertical } from "react-icons/lu";
-import { useOnClickOutside } from "@/hooks/useClickOutside";
+import { useOnClickOutside } from "@/hooks/useOnClickOutside";
 import axios from "axios";
 import { useRouter } from "next/navigation";
+import Modal from "./Modal";
+import MainCard from "./cards/MainCard";
 
 interface BoardHeaderProps {
   name?: string;
@@ -14,19 +16,29 @@ interface BoardHeaderProps {
 
 const BoardHeader: FC<BoardHeaderProps> = ({ name, clicked, boardId }) => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
-  const router = useRouter();
+  const [deleteModal, SetDeleteModal] = useState<boolean>(false);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const toggleDropdown = () => {
     setIsOpen((prev) => !prev);
   };
+
   const ref = useRef<HTMLDivElement>(null);
+  const deleteRef = useRef<HTMLDivElement>(null);
+
   useOnClickOutside(ref, () => {
     setIsOpen(false);
   });
 
+  useOnClickOutside(deleteRef, () => {
+    SetDeleteModal(false);
+  });
+
   const deleteBoard = () => {
+    setIsLoading(true);
     axios.delete("/api/board/delete", { data: { boardId } }).then(() => {
-      router.push("/home");
+      setIsLoading(false);
+      window.location.replace("/home");
     });
   };
 
@@ -53,13 +65,45 @@ const BoardHeader: FC<BoardHeaderProps> = ({ name, clicked, boardId }) => {
             <a className="hover:underline text-left">Edit board</a>
             <a
               className="text-red-500 mt-auto hover:underline text-left"
-              onClick={() => deleteBoard()}
+              onClick={() => SetDeleteModal(true)}
             >
               Delete board
             </a>
           </div>
         </button>
       </div>
+      <Modal
+        isOpen={deleteModal}
+        close={() => SetDeleteModal(false)}
+        className="top-0 right-0 flex justify-center place-items-center"
+      >
+        <MainCard ref={deleteRef}>
+          <h1 className="text-lg text-red-500 font-bold">Delete this board?</h1>
+          <p className="text-[13px] mt-2 font-medium text-mainText">
+            Are you sure you want to delete the &quot;{name}&quot; board? This
+            action will remove all columns and tasks and cannot be reversed.
+          </p>
+          <div className="flex gap-2">
+            <Button
+              variant={"warning"}
+              size={"secondary"}
+              className="w-1/2"
+              isLoading={isLoading}
+              onClick={() => deleteBoard()}
+            >
+              Delete
+            </Button>
+            <Button
+              variant={"secondary"}
+              size={"secondary"}
+              className="w-1/2"
+              onClick={() => SetDeleteModal(false)}
+            >
+              Cancel
+            </Button>
+          </div>
+        </MainCard>
+      </Modal>
     </div>
   );
 };

@@ -30,6 +30,7 @@ export const POST = async (req: Request, res: NextApiResponse) => {
         if (isAllowed === 0) {
             return new Response('', { status: 401 })
         }
+
         const destIndex = drag.destination?.index;
         const srcIndex = drag.source?.index;
 

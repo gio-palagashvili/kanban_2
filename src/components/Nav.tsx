@@ -4,7 +4,6 @@ import Button from "@/components/ui/Button";
 import Image from "next/image";
 import { Board as BoardUi } from "./ui/Board";
 import { LuMoreVertical } from "react-icons/lu";
-// import { useOnClickOutside } from "@/hooks/useClickOutside";
 import Logo from "./ui/Logo";
 import { Session } from "next-auth";
 import SignOut from "./SignOut";
@@ -14,7 +13,7 @@ import axios from "axios";
 // import { Board } from "@/types/db";
 import Label from "./ui/Label";
 import { usePathname, useRouter } from "next/navigation";
-import { useOnClickOutside } from "@/hooks/useClickOutside";
+import { useOnClickOutside } from "@/hooks/useOnClickOutside";
 import { toast } from "react-hot-toast";
 
 interface NavProps {
@@ -97,7 +96,7 @@ const Nav: FC<NavProps> = ({ session }) => {
             <div className="boards flex flex-col font-bold overflow-y-scroll max-h-[353px] mt-2">
               {boards.length >= 1 ? (
                 boards.map((board, index) => {
-                  if (path.split("/")[2] == board.id) {
+                  if (path.split("/")[3] == board.id) {
                     return (
                       <BoardUi
                         variant={"selected"}

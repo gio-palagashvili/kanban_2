@@ -2,7 +2,7 @@
 import BoardHeader from "@/components/ui/BoardHeader";
 import CreateNewTask from "@/components/CreateNewTask";
 import Modal from "@/components/ui/Modal";
-import { useOnClickOutside } from "@/hooks/useClickOutside";
+import { useOnClickOutside } from "@/hooks/useOnClickOutside";
 import axios from "axios";
 import { redirect } from "next/navigation";
 import { FC, useEffect, useRef, useState } from "react";
@@ -21,6 +21,7 @@ const page: FC<pageProps> = ({ params }) => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [openCreateCol, setOpenCreateCol] = useState<boolean>(false);
   const [board, setBoard] = useState<Board>();
+
   const ref = useRef<HTMLDivElement>(null);
   const refCol = useRef<HTMLDivElement>(null);
 
@@ -173,6 +174,7 @@ const page: FC<pageProps> = ({ params }) => {
                 {(provided) => (
                   <ColumnListItem
                     col={col}
+                    cols={board.columns}
                     ref={provided.innerRef}
                     {...provided.droppableProps}
                   />
