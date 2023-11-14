@@ -1,13 +1,13 @@
 "use client";
-import React, { FC, useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Input from "@/components/ui/fields/Input";
 import Label from "@/components/ui/Label";
 import { v4 as uuid } from "uuid";
 import Column from "@/components/ui/fields/Column";
 import Button from "./ui/Button";
-import { Toaster, toast } from "react-hot-toast";
+import { toast } from "react-hot-toast";
 import axios from "axios";
-import { data } from "autoprefixer";
+import Select from "./ui/fields/Select";
 
 interface CreateNewTaskProps {
   ref: React.MutableRefObject<HTMLDivElement | undefined>;
@@ -103,13 +103,14 @@ const CreateNewTask = React.forwardRef<HTMLDivElement, CreateNewTaskProps>(
           index: data.currentColumn,
         })
         .then((data) => {
-          const act = data.data;
+          const act: Task = data.data;
+          console.log(act);
           setBoard((prev) => {
             return {
               ...prev,
               columns: prev?.columns.map((col) => {
                 if (col.id === data.data.columnId) {
-                  col.Tasks.push({ ...act, SubTasks: [] });
+                  col.Tasks.push({ ...act });
                 }
                 return col;
               }),
@@ -132,7 +133,6 @@ const CreateNewTask = React.forwardRef<HTMLDivElement, CreateNewTaskProps>(
         ref={ref}
         className="bg-main max-h-[90vh] overflow-y-scroll p-8 w-[30rem] rounded-md shadow-md flex flex-col gap-5"
       >
-        <Toaster position="bottom-right" />
         <h1 className="text-xl font-semibold">Add new task</h1>
         <div className="flex flex-col gap-4">
           <div>
@@ -187,14 +187,11 @@ const CreateNewTask = React.forwardRef<HTMLDivElement, CreateNewTaskProps>(
           </div>
           <div>
             <Label>Select column</Label>
-            {/* //todo */}
-            <select
+            <Select
               onChange={(e) => {
                 changeHandler(e);
               }}
-              id="customSel"
               name="currentColumn"
-              className="p-1 bg-transparent font-[500] appearance-none placeholder-gray-500/70 border-[1px] text-xs pl-3 border-gray-500/40 rounded-md outline-none focus:ring-1 focus:ring-mainPurple h-10 w-full"
             >
               {cols.map((col, index) => {
                 return (
@@ -203,7 +200,7 @@ const CreateNewTask = React.forwardRef<HTMLDivElement, CreateNewTaskProps>(
                   </option>
                 );
               })}
-            </select>
+            </Select>
           </div>
           <Button
             size={"secondary"}

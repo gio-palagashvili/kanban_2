@@ -8,11 +8,7 @@ const Select: FC<SelectProps> = ({ children, ...props }) => {
   return (
     <select
       {...props}
-      //todo   onChange={(e) => {
-      //     changeHandler(e);
-      //   }}
       id="customSel"
-      //   name="currentColumn"
       className="p-1 bg-transparent font-[500] appearance-none placeholder-gray-500/70 border-[1px] text-xs pl-3 border-gray-500/40 rounded-md outline-none focus:ring-1 focus:ring-mainPurple h-10 w-full"
     >
       {children}

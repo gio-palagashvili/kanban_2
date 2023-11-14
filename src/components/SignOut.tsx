@@ -3,7 +3,7 @@ import { ButtonHTMLAttributes, FC, ReactNode, useState } from "react";
 import { signOut } from "next-auth/react";
 import { BiLogOut } from "react-icons/bi";
 import { cn } from "@/lib/utils";
-import { Toaster, toast } from "react-hot-toast";
+import { toast } from "react-hot-toast";
 
 interface SignOutProps {
   Classes: string;
@@ -19,7 +19,6 @@ const SignOut: FC<SignOutProps> = ({ Classes }) => {
   };
   return (
     <>
-      <Toaster position="bottom-right" />
       <BiLogOut
         size={22}
         className={cn(Classes, "hover:cursor-pointer")}

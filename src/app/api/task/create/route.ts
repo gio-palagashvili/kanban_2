@@ -47,9 +47,11 @@ export const POST = async (req: Request, res: NextApiResponse) => {
                 SubTasks: {
                     create: subTasks.length > 0 ? subTasks.map((task) => ({ complete: false, name: task.name })) : undefined,
                 },
+            },
+            include: {
+                SubTasks: true
             }
         })
-
         return new Response(JSON.stringify(taskDb));
     } catch (error) {
         if (error instanceof Prisma.PrismaClientKnownRequestError) {

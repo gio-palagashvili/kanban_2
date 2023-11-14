@@ -3,7 +3,7 @@ import React, { RefObject, useEffect, useRef, useState } from "react";
 import Button from "./ui/Button";
 import Input from "./ui/fields/Input";
 import { v4 as uuid } from "uuid";
-import { Toaster, toast } from "react-hot-toast";
+import { toast } from "react-hot-toast";
 import Label from "./ui/Label";
 import axios from "axios";
 import Column from "@/components/ui/fields/Column";
@@ -83,7 +83,6 @@ const CreateNewBoard = React.forwardRef<HTMLDivElement, CreateNewBoardProps>(
         className="bg-main w-[30rem] min-h-[25rem] overflow-y-scroll rounded-md p-8 flex flex-col gap-5"
         ref={ref}
       >
-        <Toaster position="bottom-right" />
         <h1 className="text-xl">Add new board</h1>
         <div className="flex flex-col gap-3">
           <div className="w-full">

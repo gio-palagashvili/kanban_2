@@ -3,7 +3,7 @@ import { FC, useState } from "react";
 import { signIn } from "next-auth/react";
 import Logo from "@/components/ui/Logo";
 import Button from "@/components/ui/Button";
-import { Toaster, toast } from "react-hot-toast";
+import { toast } from "react-hot-toast";
 import { AiOutlineGoogle } from "react-icons/ai";
 
 interface pageProps {}
@@ -29,7 +29,6 @@ const page: FC<pageProps> = ({}) => {
 
   return (
     <div className="w-[100vw] h-[100vh] flex place-items-center justify-center">
-      <Toaster position="bottom-right" />
       <div className="w-1/2 flex justify-center place-items-center gap-4 flex-col">
         <div className="flex justify-center place-items-center gap-4 md:place-items-baseline">
           <Logo Open={false} setOpen={() => {}} />

@@ -1,10 +1,7 @@
-import Nav from "@/components/Nav";
 import "./globals.css";
 import { Inter } from "next/font/google";
-import { getServerSession } from "next-auth";
-import { redirect } from "next/navigation";
-import { authOptions } from "@/lib/authOptions";
 import { cn } from "@/lib/utils";
+import { Toaster } from "react-hot-toast";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -20,7 +17,10 @@ export default async function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={cn(inter.className, "h-full flex")}>{children}</body>
+      <body className={cn(inter.className, "h-full flex")}>
+        {children}
+        <Toaster position="bottom-right"></Toaster>
+      </body>
     </html>
   );
 }
