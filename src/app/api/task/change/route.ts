@@ -3,17 +3,17 @@ import { NextApiResponse } from 'next';
 
 interface IBody {
     colId: string,
-    taksId: string,
+    taskId: string,
 }
 export const PATCH = async (req: Request, res: NextApiResponse) => {
     try {
-        const { colId, taksId }: IBody = await req.json();
+        const { colId, taskId }: IBody = await req.json();
         await db.task.update({
             data: {
                 columnId: parseInt(colId),
             },
             where: {
-                id: parseInt(taksId)
+                id: parseInt(taskId)
             }
         })
         return new Response('')

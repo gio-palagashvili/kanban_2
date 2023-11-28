@@ -64,17 +64,23 @@ const ColumnListItem: FC<ColumnListItemProps> = forwardRef(
     };
 
     const handleSelectChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-      axios
+      let axiosPromise = axios
         .patch("/api/task/change", {
           colId: e.target.value,
-          taksId: task?.id,
+          taskId: task?.id,
         })
         .then(() => {
           window.location.reload();
         })
         .catch((err) => {
-          toast.error(err.response.data);
+          toast.error(err.response?.data || "There was an error updating.");
         });
+
+      toast.promise(axiosPromise, {
+        loading: "Saving...",
+        success: <p>Saved, reloading</p>,
+        error: "",
+      });
     };
 
     return (
