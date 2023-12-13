@@ -1,7 +1,7 @@
 "use client";
 import React, { useEffect, useRef, useState } from "react";
 import Input from "@/components/ui/fields/Input";
-import Label from "@/components/ui/Label";
+import Label from "@/components/ui/text/Label";
 import { v4 as uuid } from "uuid";
 import Column from "@/components/ui/fields/Column";
 import Button from "./ui/Button";

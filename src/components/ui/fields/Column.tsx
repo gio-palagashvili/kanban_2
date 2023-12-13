@@ -16,7 +16,7 @@ const Column = forwardRef<HTMLInputElement, ColumnProps>(
           <IoCloseOutline
             onClick={IoCloseOutlineClick}
             size={25}
-            className="stroke-gray-300 ml-auto"
+            className="stroke-gray-300 ml-auto hover:stroke-slate-400 hover:scale-95 transition-all"
           />
         </Button>
       </div>

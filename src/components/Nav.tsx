@@ -11,7 +11,7 @@ import Modal from "./ui/Modal";
 import CreateNewBoard from "./CreateNewBoard";
 import axios from "axios";
 // import { Board } from "@/types/db";
-import Label from "./ui/Label";
+import Label from "./ui/text/Label";
 import { usePathname, useRouter } from "next/navigation";
 import { useOnClickOutside } from "@/hooks/useOnClickOutside";
 import { toast } from "react-hot-toast";

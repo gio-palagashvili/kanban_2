@@ -9,6 +9,12 @@ import { FC, useEffect, useRef, useState } from "react";
 import ColumnListItem from "@/components/list/ColumnListItem";
 import { DragDropContext, Droppable, DropResult } from "react-beautiful-dnd";
 import CreateNewCol from "@/components/CreateNewCol";
+import MainCard from "@/components/ui/cards/MainCard";
+import LargeHeading from "@/components/ui/text/headings/LargeHeading";
+import Input from "@/components/ui/fields/Input";
+import Label from "@/components/ui/text/Label";
+import Column from "@/components/ui/fields/Column";
+import ColumnList from "@/components/list/ColumnList";
 
 interface pageProps {
   params: {
@@ -19,14 +25,19 @@ interface pageProps {
 const page: FC<pageProps> = ({ params }) => {
   const { boardId } = params;
   const [isOpen, setIsOpen] = useState<boolean>(false);
+  const [editOpen, setEditOpen] = useState<boolean>(true);
   const [openCreateCol, setOpenCreateCol] = useState<boolean>(false);
   const [board, setBoard] = useState<Board>();
+  const editRef = useRef<HTMLElement>(null);
 
   const ref = useRef<HTMLDivElement>(null);
   const refCol = useRef<HTMLDivElement>(null);
 
   useOnClickOutside(ref, () => {
     setIsOpen(false);
+  });
+  useOnClickOutside(editRef, () => {
+    setEditOpen(false);
   });
   useOnClickOutside(refCol, () => {
     setOpenCreateCol(false);
@@ -156,12 +167,17 @@ const page: FC<pageProps> = ({ params }) => {
     });
   };
 
+  const deleteColumn = (colId: string) => {
+    console.log(colId);
+  };
+
   return (
     <div className="h-full flex flex-col w-full overflow-scroll">
       <BoardHeader
         name={!board ? "loading..." : board.name}
         boardId={boardId}
         clicked={() => setIsOpen(true)}
+        editClicked={() => setEditOpen(true)}
       />
       <div className="flex p-6 gap-4 h-[90%] overflow-scroll ">
         <DragDropContext onDragEnd={(e) => handleDrag(e)}>
@@ -217,6 +233,34 @@ const page: FC<pageProps> = ({ params }) => {
         ) : (
           ""
         )}
+      </Modal>
+      <Modal
+        isOpen={editOpen}
+        className="left-0 top-0 h-[100vh] flex place-items-center justify-center"
+        close={() => setEditOpen(false)}
+      >
+        <MainCard ref={editRef} className="flex flex-col gap-5">
+          <LargeHeading>Edit board</LargeHeading>
+          <div className="flex flex-col">
+            <Input label="Board name" value={board?.name} />
+          </div>
+          <div>
+            <Label>Board columns</Label>
+            <ColumnList size={"medium"}>
+              {board?.columns.map((column) => {
+                return (
+                  <Column
+                    IoCloseOutlineClick={() => deleteColumn(column.id)}
+                    key={column.id}
+                    value={column.name}
+                  >
+                    {column.name}
+                  </Column>
+                );
+              })}
+            </ColumnList>
+          </div>
+        </MainCard>
       </Modal>
     </div>
   );

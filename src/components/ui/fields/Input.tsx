@@ -2,7 +2,7 @@ import { FC, InputHTMLAttributes, forwardRef } from "react";
 import { cn } from "@/lib/utils";
 import { cva, VariantProps } from "class-variance-authority";
 import Button from "../Button";
-import Label from "../Label";
+import Label from "../text/Label";
 
 export const inputVariants = cva("input font-semibold", {
   variants: {

@@ -21,7 +21,10 @@ const SignOut: FC<SignOutProps> = ({ Classes }) => {
     <>
       <BiLogOut
         size={22}
-        className={cn(Classes, "hover:cursor-pointer")}
+        className={cn(
+          Classes,
+          "hover:cursor-pointer transition-all hover:scale-90"
+        )}
         onClick={signOutImp}
       />
     </>

@@ -4,9 +4,10 @@ import Button from "./ui/Button";
 import Input from "./ui/fields/Input";
 import { v4 as uuid } from "uuid";
 import { toast } from "react-hot-toast";
-import Label from "./ui/Label";
+import Label from "./ui/text/Label";
 import axios from "axios";
 import Column from "@/components/ui/fields/Column";
+import ColumnList from "./list/ColumnList";
 
 interface CreateNewBoardProps {
   ref: RefObject<HTMLDivElement>;
@@ -93,7 +94,7 @@ const CreateNewBoard = React.forwardRef<HTMLDivElement, CreateNewBoardProps>(
             />
           </div>
           <Label className="mt-2">Board Columns</Label>
-          <div className="w-full flex flex-col gap-2 h-fit py-1 max-h-[7rem] overflow-y-scroll overflow-x-hidden">
+          <ColumnList size={"small"}>
             {Cols.length === 0 ? (
               <Label className="opacity-70">No columns</Label>
             ) : (
@@ -109,7 +110,7 @@ const CreateNewBoard = React.forwardRef<HTMLDivElement, CreateNewBoardProps>(
                 );
               })
             )}
-          </div>
+          </ColumnList>
           <div className="">
             <Button
               size={"secondary"}

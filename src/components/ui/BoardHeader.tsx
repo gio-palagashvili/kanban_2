@@ -12,9 +12,15 @@ interface BoardHeaderProps {
   name?: string;
   boardId: string;
   clicked: () => void;
+  editClicked: () => void;
 }
 
-const BoardHeader: FC<BoardHeaderProps> = ({ name, clicked, boardId }) => {
+const BoardHeader: FC<BoardHeaderProps> = ({
+  name,
+  clicked,
+  boardId,
+  editClicked,
+}) => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [deleteModal, SetDeleteModal] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -62,7 +68,12 @@ const BoardHeader: FC<BoardHeaderProps> = ({ name, clicked, boardId }) => {
                 : "hidden"
             }
           >
-            <a className="hover:underline text-left">Edit board</a>
+            <a
+              className="hover:underline text-left"
+              onClick={() => editClicked()}
+            >
+              Edit board
+            </a>
             <a
               className="text-red-500 mt-auto hover:underline text-left"
               onClick={() => SetDeleteModal(true)}
